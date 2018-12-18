@@ -1,0 +1,2 @@
+python .\MSOPowerpointEaseWindow.py
+pause

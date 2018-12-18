@@ -283,13 +283,13 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                                           saveTableAsPicture,keepChartListObjects)
         shtSum.Activate()
         wkbs.Parent.CutCopyMode = False
-        wkbs.Close()
+        wkbs.Close(SaveChanges=False)
         ExcelApp.Quit() 
         if os.path.exists(trackFile):
             os.startfile(trackFile)
             return False
-        
         information = 'linkExceltoPPT finished >>> please find the PPT:%s in the dir:%s!'%(os.path.basename(pptFile),dirname)
+        self.savePPT()
         self.slowprint(information)
         print('<'*40)
         os.startfile(dirname)
