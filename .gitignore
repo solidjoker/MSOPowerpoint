@@ -114,8 +114,16 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# IPython
+*.ipynb
+
 # Windows:
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Custom
+reference/
+testfiles/
+testpictures/
 
