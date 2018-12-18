@@ -13,7 +13,7 @@
 # <li>对于损坏的Chart的修复</li>
 # 
 
-# In[1]:
+# In[2]:
 
 
 import os, time, datetime, pprint, traceback, tempfile, copy
@@ -283,7 +283,8 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                                           saveTableAsPicture,keepChartListObjects)
         shtSum.Activate()
         wkbs.Parent.CutCopyMode = False
-        wkbs.Close(SaveChanges=False)
+        wkb.Close(SaveChanges=False)
+        wkbs.Close()
         ExcelApp.Quit() 
         if os.path.exists(trackFile):
             os.startfile(trackFile)
