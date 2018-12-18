@@ -231,7 +231,7 @@ class MSOPowerpointElement():
         except:
             traceback.print_exc()
             return False      
-    def setTextFrame(self,Shape=None,AutoSize=0,HorizontalAnchor=1,VerticalAnchor=3,
+    def setTextFrame(self,Shape=None,AutoSize=0,HorizontalAnchor=1,VerticalAnchor=3,WordWrap=1,
                      MarginLeft=10,MarginTop=10,MarginRight=10,MarginBottom=10):
         '''
         Text: Aitosize and alignment
@@ -248,6 +248,7 @@ class MSOPowerpointElement():
                 TextFrame.AutoSize = AutoSize  # 0:不自动调整,1:根据文本调整
                 TextFrame.TextRange.ParagraphFormat.Alignment = HorizontalAnchor # 1:左对齐，2:中对齐
                 TextFrame.VerticalAnchor = VerticalAnchor # 1:垂直上，3:垂直中，4:垂直下
+                TextFrame2.WordWrap = WordWrap
                 TextFrame.MarginLeft = MarginLeft 
                 TextFrame.MarginTop = MarginTop
                 TextFrame.MarginRight = MarginRight
