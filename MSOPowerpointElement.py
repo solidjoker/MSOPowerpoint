@@ -205,9 +205,10 @@ class MSOPowerpointElement():
             assert Orientation == 1 or Orientation == 6, 'Orientation must be 1 or 6'
             if self.presInfo['SlidesCount'] == 0: self.addSlide()
             self.pptShape = self.pptSlide.Shapes.AddLabel(Orientation=Orientation,Left=Left,Top=Top,Width=Width,Height=Height)
-            self.addText(Text=Text)
+            if Text: self.addText(Text=Text) # 会自动变换格式
             self.setShape()
             if Initialized:
+                print('Initialized')
                 self.setTextFrame()
             print('Shape Label:%s added!'%self.pptShape.Name)
             return True
@@ -221,8 +222,7 @@ class MSOPowerpointElement():
         try:
             Shape = self.initShape(Shape=Shape)
             if not Shape: return False
-            if not Text:
-                Text = ''
+            if not Text: return False
             if Shape.HasTextFrame:
                 Shape.TextFrame.TextRange.Text = Text
                 print('Text:%s added in Shape:%s!'%(Text,Shape.Name))
@@ -245,6 +245,7 @@ class MSOPowerpointElement():
             if not Shape: return False
             if Shape.HasTextFrame:
                 TextFrame = Shape.TextFrame
+                TextFrame2 = Shape.TextFrame2
                 TextFrame.AutoSize = AutoSize  # 0:不自动调整,1:根据文本调整
                 TextFrame.TextRange.ParagraphFormat.Alignment = HorizontalAnchor # 1:左对齐，2:中对齐
                 TextFrame.VerticalAnchor = VerticalAnchor # 1:垂直上，3:垂直中，4:垂直下
@@ -270,7 +271,7 @@ class MSOPowerpointElement():
             if Shape.HasTextFrame:
                 for Font in [Shape.TextFrame.TextRange.Font,Shape.TextFrame2.TextRange.Font]:
                     self.setMSOobj(obj=Font,r=r,g=g,b=b,ColorName=ColorName,
-                                   Size=Size,Name=Name,Bold=Bold,Italic=Italic,Underline=Underline,Strike=Strike)
+                                   Size=Size,Name=Name,NameFarEast=Name,Bold=Bold,Italic=Italic,Underline=Underline,Strike=Strike)
                 print('%s Text Range setted!'%(Shape.Name))
                 return True
             return False
