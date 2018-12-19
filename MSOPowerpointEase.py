@@ -13,7 +13,7 @@
 # <li>对于损坏的Chart的修复</li>
 # 
 
-# In[2]:
+# In[1]:
 
 
 import os, time, datetime, pprint, traceback, tempfile, copy
@@ -32,7 +32,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[6]:
+# In[2]:
 
 
 class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
@@ -333,32 +333,33 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                     msg = 'index %s failed!' % i
                     print(msg)
                     self.linkExcelTrack(msg,trackFile)
-        
+
             if linktype == 'ShapeSource':
-                if self.pptShape.HasTable:
-                    shtdata = shts(credic[linktype])
-                    shtdata.Activate()
-                    if not saveTableAsPicture:
+                shtdata = shts(credic[linktype])
+                shtdata.Activate()
+                if not saveTableAsPicture:
+                    if self.pptShape.HasTable:
                         shtdata.Cells.Copy()
                         self.pptShape.Table.Cell(1,1).Select()
                         self.pptWin = self.pptApp.ActiveWindow
                         self.pptWin.View.Paste()
                     else:
-                        self.pptShape.Delete()
-                        shtdata.UsedRange.Copy()
-                        self.Shape = self.pptSlide.Shapes.PasteSpecial(DataType=1)
-                        self.setPositionSize(self.Shape,LockAspectRatio=0,
-                                             Left=credic['Left'],Top=credic['Top'],Width=credic['Width'],Height=credic['Height'])
-                        for i in range(credic['ZOrderPosition'],slideShapesCounts):
-                            self.Shape.ZOrder(3)
-                    msg = 'index %s done!' % i
-                    print(msg)
-                    return True
+                        msg = 'index %s failed!' % i
+                        print(msg)
+                        self.linkExcelTrack(msg,trackFile)  
+                        return False
                 else:
-                    msg = 'index %s failed!' % i
-                    print(msg)
-                    self.linkExcelTrack(msg,trackFile)    
-                return False
+                    self.pptShape.Delete()
+                    shtdata.UsedRange.Copy()
+                    self.Shape = self.pptSlide.Shapes.PasteSpecial(DataType=1)
+                    self.setPositionSize(self.Shape,LockAspectRatio=0,
+                                         Left=credic['Left'],Top=credic['Top'],Width=credic['Width'],Height=credic['Height'])
+                    for i in range(credic['ZOrderPosition'],slideShapesCounts):
+                        self.Shape.ZOrder(3)
+                msg = 'index %s done!' % i
+                print(msg)
+                return True
+
         except:
             traceback.print_exc()
             msg = 'index %s failed!' % i
@@ -380,7 +381,7 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
 
 # #### Test_linkPPTtoExcel
 
-# In[9]:
+# In[3]:
 
 
 if __name__ == '__main__':
@@ -393,12 +394,12 @@ if __name__ == '__main__':
 
 # #### Test_linkExceltoPPT
 
-# In[22]:
+# In[6]:
 
 
 if __name__ == '__main__':
     # create
     MPE = MSOPowerpointEase(Blank=None)
-    dirname = r'C:\SmithYe\PythonProject3\OfficeApi\MSOPowerpoint\testfiles\template_Table_20181218000231'
+    dirname = r'C:\SmithYe\PythonProject3\OfficeApi\MSOPowerpoint\testfiles\template_Group_20181219095409'
     pptFile = MPE.linkExceltoPPT(dirname,saveTableAsPicture=True,keepChartListObjects=True)
 
