@@ -146,9 +146,9 @@ class MSOPowerpointBase():
         try:
             assert self.pptSel,'pptSel must be setted first!'
             pptPageSetup = self.pptSel.PageSetup        
+            pptPageSetup.SlideOrientation = SlideOrientation # 0:纵向、1:横向
             pptPageSetup.SlideWidth = SlideWidth * 72
             pptPageSetup.SlideHeight = SlideHeight * 72
-            pptPageSetup.SlideOrientation = SlideOrientation # 0:纵向、1:横向
             print('SlideWidth:%.1f inch,SlideHeight:%.1f inch,SlideOrientation:%s'%(SlideWidth,SlideHeight,SlideOrientation))
             return True
         except:
@@ -357,4 +357,132 @@ class MSOPowerpointBase():
         return MSOPowerpointFunc.exportPPTtoExcel(self)
     def exportDfsToExcel(self,dfs,sheetnames,filename):
         MSOPowerpointFunc.exportDfsToExcel(dfs,sheetnames,filename)
+
+    def setMSOobj(self,obj=None,r=None,g=None,b=None,ColorName=None,ShowMessage=True,**kwargs):
+        '''
+        MSO obj set
+        '''
+        if not obj:
+            return False
+        # set ForeColor
+        for k,v in kwargs.items():
+            if hasattr(obj,k):
+                # method
+                if callable(getattr(obj,k)):
+                    if v == True:
+                        try:
+                            getattr(obj,k)()
+                        except:
+                            traceback.print_exc()
+                    else:
+                        try:
+                            getattr(obj,k)(v)
+                        except:
+                            traceback.print_exc()               
+                # attribute
+                else:
+                    if v != None:
+                        try:
+                            setattr(obj,k,v)
+                        except:
+                            traceback.print_exc()
+        try:
+            color = MSOPowerpointFunc.getRGB(r=r,g=g,b=b,ColorName=ColorName)
+            if color != False:
+                if hasattr(obj,'ForeColor') and hasattr(obj.ForeColor,'RGB'):
+                    setattr(obj.ForeColor,'RGB',color)
+                elif hasattr(obj,'Color') and hasattr(obj.Color,'RGB'):
+                    setattr(obj.Color,'RGB',color)
+        except:
+            traceback.print_exc()
+        if ShowMessage:
+            print('MSOobj setted!')
+        return True
+    def setPositionSize(self,Shape=None,LockAspectRatio=1,Left=None,Top=None,Width=None,Height=None):
+        '''
+        set Shape Position and Size：
+        LockAspectRatio: 1: lock, 0:unlock
+        Left,Top: for position
+        Width,Height: for size
+        '''
+        try:
+            Shape = self.initShape(Shape=Shape)
+            if not Shape: return False
+            if Left:
+                Shape.Left = Left
+            if Top:
+                Shape.Top = Top
+            # 锁定纵横比
+            Shape.LockAspectRatio = LockAspectRatio
+            if Width:
+                Shape.Width = Width
+            if Height:
+                Shape.Height = Height
+            print('%s Shape Postion and Size setted!'%(Shape.Name))
+            return True
+        except:
+            traceback.print_exc()
+            return False  
+    
+    def addPicture(self,Picture=None,LinkToFile=0,SaveWithDocument=-1,Left=0,Top=0,Width=-1,Height=-1,AdjustDpi=True):
+        '''
+        Picture: Insert Picture
+        '''
+        try:
+            assert os.path.exists(Picture),'%s not found!'%Picture
+            if AdjustDpi: Picture = MSOPowerpointFunc.funcPictureDpi(Picture,self.presInfo['DPI'])
+            if self.presInfo['SlidesCount'] == 0: self.addSlide()
+            self.pptShape = self.pptSlide.Shapes.AddPicture(FileName=Picture,
+                                           LinkToFile=LinkToFile,
+                                           SaveWithDocument=SaveWithDocument,
+                                           Left=Left,Top=Top,Width=Width,Height=Height)
+            self.setShape()
+            print('Shape Picture:%s added!'%self.pptShape.Name)
+            return self.pptShape
+        except:
+            traceback.print_exc()
+            return False
+        
+    def _funcGetDpi(self):
+        '''
+        getDpi
+        '''
+        dpi = 72
+        ci = 0.05 # 误差
+        w = h = 100 # 初始宽度
+        im = Image.new('1',(w,h),'white')
+        tempf = tempfile.mkstemp('.jpg')[1]
+        im.save(tempf,dpi=(dpi,dpi))
+        im.close()
+        todel = False
+        if not self.pptSlides.Count:
+            todel = True
+            self.addSlide()
+        self.addPicture(tempf,AdjustDpi=False)
+        ration = self.pptShape.Width / w
+        if  not (1 - ci < ration < 1 + ci):
+            dpi *= ration
+        self.delShape()
+        if todel:
+            self.delSlide()
+        return dpi
+    def _help(self,obj=None):
+        # 要改的！！！
+        if not obj:
+            '''
+            默认Fill
+            '''
+            todel = False
+            if not self.pptSlides.Count:
+                todel = True
+                self.addSlide()
+            self.addShape()
+            help(self.pptShape.Fill)
+            self.delShape()
+            if todel:
+                self.delSlide()
+        else:
+            help(obj)
+
+    
 

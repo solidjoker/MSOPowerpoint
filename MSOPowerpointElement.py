@@ -295,24 +295,6 @@ class MSOPowerpointElement():
         except:
             traceback.print_exc()
             return False     
-    def addPicture(self,Picture=None,LinkToFile=0,SaveWithDocument=-1,Left=0,Top=0,Width=-1,Height=-1,AdjustDpi=True):
-        '''
-        Picture: Insert Picture
-        '''
-        try:
-            assert os.path.exists(Picture),'%s not found!'%Picture
-            if AdjustDpi: Picture = MSOPowerpointFunc.funcPictureDpi(Picture,self.presInfo['DPI'])
-            if self.presInfo['SlidesCount'] == 0: self.addSlide()
-            self.pptShape = self.pptSlide.Shapes.AddPicture(FileName=Picture,
-                                           LinkToFile=LinkToFile,
-                                           SaveWithDocument=SaveWithDocument,
-                                           Left=Left,Top=Top,Width=Width,Height=Height)
-            self.setShape()
-            print('Shape Picture:%s added!'%self.pptShape.Name)
-            return self.pptShape
-        except:
-            traceback.print_exc()
-            return False
     def addLine(self,BeginX=0,BeginY=0,EndX=100,EndY=100):
         '''
         Line: add Line
@@ -797,5 +779,4 @@ class MSOPowerpointElement():
         except:
             traceback.print_exc()
             return False  
-    
 
