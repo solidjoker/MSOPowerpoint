@@ -2,17 +2,11 @@
 # coding: utf-8
 
 # # PowerPointBase
-# update: 2018-12-11
+# update: 2018-12-20
 # 
 # to be fix: 
 # <li>export 需要处理负值<li>
 # <li>Create 需要精细化</li>
-# 
-# <li>Table, 直接Excel</li>
-# <li>Chart, 顺序</li>
-# 
-# <li>界面化</li>
-# 
 # <li>看看MSOPowerpointFunc中，有什么可以放到CustomFunc</li>
 
 # In[1]:

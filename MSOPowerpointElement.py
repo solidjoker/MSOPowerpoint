@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 import os, time, datetime, pprint, traceback, tempfile
@@ -20,7 +20,7 @@ import MSOPowerpointFunc
 import MSOPowerpointBase
 
 
-# In[3]:
+# In[2]:
 
 
 class MSOPowerpointElement():
@@ -205,11 +205,11 @@ class MSOPowerpointElement():
             assert Orientation == 1 or Orientation == 6, 'Orientation must be 1 or 6'
             if self.presInfo['SlidesCount'] == 0: self.addSlide()
             self.pptShape = self.pptSlide.Shapes.AddLabel(Orientation=Orientation,Left=Left,Top=Top,Width=Width,Height=Height)
-            if Text: self.addText(Text=Text) # 会自动变换格式
-            self.setShape()
             if Initialized:
                 print('Initialized')
                 self.setTextFrame()
+            if Text: self.addText(Text=Text) # 会自动变换格式
+            self.setShape()                
             print('Shape Label:%s added!'%self.pptShape.Name)
             return True
         except:
@@ -222,7 +222,8 @@ class MSOPowerpointElement():
         try:
             Shape = self.initShape(Shape=Shape)
             if not Shape: return False
-            if not Text: return False
+            if not Text:
+                Text = ''
             if Shape.HasTextFrame:
                 Shape.TextFrame.TextRange.Text = Text
                 print('Text:%s added in Shape:%s!'%(Text,Shape.Name))
