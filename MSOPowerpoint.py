@@ -9,7 +9,7 @@
 # <li>Create 需要精细化</li>
 # <li>看看MSOPowerpointFunc中，有什么可以放到CustomFunc</li>
 
-# In[1]:
+# In[10]:
 
 
 import os, time, datetime, pprint, traceback, tempfile
@@ -28,7 +28,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[2]:
+# In[11]:
 
 
 class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
@@ -829,7 +829,7 @@ class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
 
 # #### Test_runExportPPTtoExcel
 
-# In[3]:
+# In[12]:
 
 
 if __name__ == '__main__':
@@ -842,7 +842,7 @@ if __name__ == '__main__':
 
 # #### Test_CreatePPT
 
-# In[36]:
+# In[13]:
 
 
 if __name__ == '__main__':
@@ -854,7 +854,7 @@ if __name__ == '__main__':
 
 # #### Test_All
 
-# In[ ]:
+# In[14]:
 
 
 if __name__ == '__main__': 
