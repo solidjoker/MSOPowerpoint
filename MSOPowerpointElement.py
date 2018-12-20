@@ -297,6 +297,30 @@ class MSOPowerpointElement():
         except:
             traceback.print_exc()
             return False     
+    def setTextParagraphFormat(self,Shape=None,SpaceWithin=1,Bullet=False):
+        '''
+        Text:
+        SpaceWithin: 行距
+        Bullet: 项目符号
+        '''
+        try:
+            Shape = self.initShape(Shape=Shape)
+            if not Shape: return False
+            if Shape.HasTextFrame:
+                ParagraphFormat = Shape.TextFrame.TextRange.ParagraphFormat
+                ParagraphFormat.SpaceWithin = SpaceWithin
+                if Bullet:
+                    ParagraphFormat.Bullet.Visible = True
+                    ParagraphFormat.Bullet.RelativeSize = 1                    
+                    ParagraphFormat.Bullet.Type = 1
+                    ParagraphFormat.Bullet.Character = 1
+                print('Text Paragraph Format %s setted!'%(Shape.Name))
+                return True
+            return False
+        except:
+            traceback.print_exc()
+            return False  
+             
     def addLine(self,BeginX=0,BeginY=0,EndX=100,EndY=100):
         '''
         Line: add Line
@@ -310,7 +334,7 @@ class MSOPowerpointElement():
         except:
             traceback.print_exc()
             return False       
-        
+    
     def addTable(self,NumRows=10,NumColumns=5,Left=0,Top=0,Width=600,Height=400,Initialized=True,StyleName=None):
         '''
         Table: addTable
