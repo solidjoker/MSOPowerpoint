@@ -9,7 +9,7 @@
 # <li>Create 需要精细化</li>
 # <li>看看MSOPowerpointFunc中，有什么可以放到CustomFunc</li>
 
-# In[10]:
+# In[4]:
 
 
 import os, time, datetime, pprint, traceback, tempfile
@@ -28,7 +28,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[11]:
+# In[5]:
 
 
 class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
@@ -401,7 +401,12 @@ class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
             if shapeInfo[shapesCount]['ShapeType'] == 'msoAutoShape':
                 shapeInfo[shapesCount]['Source'] = None
             elif shapeInfo[shapesCount]['ShapeType'] == 'msoPicture':
-                Source = os.path.join(os.path.dirname(self.presInfo['FileName']),'%s.gif'%shapesCount)
+                dirname =  self.presInfo['FileName']
+                dirname = dirname[:dirname.rfind('.')]
+                dirname = os.path.join(dirname,'pictures')
+                if os.path.exists(dirname):
+                    os.mkdir(dirname)
+                Source = os.path.join(dirname,'%s.gif'%shapesCount)
                 Shape.Export(Source,Filter=0)
                 shapeInfo[shapesCount]['Source'] = Source
             else:
@@ -829,12 +834,12 @@ class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
 
 # #### Test_runExportPPTtoExcel
 
-# In[12]:
+# In[6]:
 
 
 if __name__ == '__main__':
     ## export
-    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_Chart.pptx'
+    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_shape.pptx'
     MP = MSOPowerpoint(FileName=FileName,WithWindow=1)
     MP.exportShapesInfo()
     print(MP.exportPPTtoExcel())

@@ -54,9 +54,13 @@ def exportPPTtoExcel(MP):
     assert MP.shapesInfo, 'please run PowerpointBase.genGetShapesInfo first!'
     try:
         # 文件名称
+        dirname =  MP.presInfo['FileName']
+        dirname = dirname[:dirname.rfind('.')]
+        if not os.path.exists(dirname):
+            os.mkdir(dirname)
         _filename = os.path.basename(MP.presInfo['FileName'])
         _filename = _filename[:_filename.rfind('.')]
-        filename = os.path.join(os.path.dirname(MP.presInfo['FileName']),'%s.xlsx'%_filename)
+        filename = os.path.join(dirname,'%s.xlsx'%_filename)
 
         # 初始化
         shapesInfo = {k:v for k,v in MP.shapesInfo.items() if v}
