@@ -9,7 +9,7 @@
 # <li>Create 需要精细化</li>
 # <li>看看MSOPowerpointFunc中，有什么可以放到CustomFunc</li>
 
-# In[4]:
+# In[1]:
 
 
 import os, time, datetime, pprint, traceback, tempfile
@@ -28,7 +28,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[5]:
+# In[6]:
 
 
 class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
@@ -403,8 +403,10 @@ class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
             elif shapeInfo[shapesCount]['ShapeType'] == 'msoPicture':
                 dirname =  self.presInfo['FileName']
                 dirname = dirname[:dirname.rfind('.')]
+                if not os.path.exists(dirname):
+                    os.mkdir(dirname)
                 dirname = os.path.join(dirname,'pictures')
-                if os.path.exists(dirname):
+                if not os.path.exists(dirname):
                     os.mkdir(dirname)
                 Source = os.path.join(dirname,'%s.gif'%shapesCount)
                 Shape.Export(Source,Filter=0)
@@ -834,7 +836,7 @@ class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
 
 # #### Test_runExportPPTtoExcel
 
-# In[6]:
+# In[7]:
 
 
 if __name__ == '__main__':
