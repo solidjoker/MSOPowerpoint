@@ -355,8 +355,8 @@ class MSOPowerpointBase():
 
     def exportPPTtoExcel(self):
         return MSOPowerpointFunc.exportPPTtoExcel(self)
-    def exportDfsToExcel(self,dfs,sheetnames,filename):
-        MSOPowerpointFunc.exportDfsToExcel(dfs,sheetnames,filename)
+    def exportDfsToExcel(self,dfs,sheetnames,filename,index=True):
+        MSOPowerpointFunc.exportDfsToExcel(dfs,sheetnames,filename,index=index)
 
     def setMSOobj(self,obj=None,r=None,g=None,b=None,ColorName=None,ShowMessage=True,**kwargs):
         '''

@@ -28,7 +28,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[6]:
+# In[2]:
 
 
 class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):

@@ -103,7 +103,7 @@ def exportPPTtoExcel(MP):
         dfs.extend(dfsFL)
         sheetnames.extend(sheetsnameFL)
         # 写入Excel
-        exportDfsToExcel(dfs,sheetnames,filename)
+        exportDfsToExcel(dfs,sheetnames,filename,index=True)
         # 打开Excel
         os.startfile(filename)
         return filename
@@ -111,11 +111,11 @@ def exportPPTtoExcel(MP):
         print('%s\nPlease close the excel:%s'%(e,filename))
         return False 
 
-def exportDfsToExcel(dfs,sheetnames,filename):
+def exportDfsToExcel(dfs,sheetnames,filename,index=True):
     # 写入Excel
     writer = pd.ExcelWriter(filename, engine='openpyxl')
     for df,sheetname in zip(dfs,sheetnames):
-        df.to_excel(excel_writer=writer,sheet_name=sheetname)
+        df.to_excel(excel_writer=writer,sheet_name=sheetname,index=index)
     writer.save()
     writer.close()
     
