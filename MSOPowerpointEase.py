@@ -387,7 +387,7 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
 if __name__ == '__main__':
     ## export
     MPE = MSOPowerpointEase(Blank=False)
-    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_Group.pptx'
+    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/teo.pptx'
     #FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/template.pptx'
     dirname = MPE.linkPPTtoExcel(FileName=FileName,keepChartListObjects=None)
 
