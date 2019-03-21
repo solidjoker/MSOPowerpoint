@@ -16,7 +16,7 @@
 # <li>对于损坏的Chart的修复</li>
 # 
 
-# In[49]:
+# In[2]:
 
 
 import os, time, datetime, pprint, traceback, tempfile, copy
@@ -35,7 +35,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[67]:
+# In[9]:
 
 
 class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
@@ -215,7 +215,7 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
         # ShapeSoucre序号
         j = list(df.columns).index('ShapeSource')
         # init
-        tablerow = 1
+        tablerow = 2
         for i in df.index.tolist():
             if df['ReplaceShapeSource'][i] == True:
                 sht = shts.Add(After=wkb.Activesheet)
@@ -237,6 +237,7 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                 time.sleep(self.seconds/2)
                 sht.Activate()
                 sht.Paste()
+                
                 sht.Cells(1,1).CurrentRegion.Copy(shtTableData.Cells(tablerow,1))
                 totalrows = shtTableData.Cells(tablerow,1).CurrentRegion.Rows.Count
                 cell1 = shtTableSummary.Cells(tablerow,1)
@@ -244,10 +245,12 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                 rng = shtTableSummary.Range(cell1,cell2)
                 rng.value = linkdic['ShapeSource']
                 shtAddress = '%s!%s'%(shtTableData.Name,shtTableData.Cells(tablerow,1).CurrentRegion.Address)
-                
                 tablerow += totalrows + 1
+                print('totalrows:%s'%totalrows) 
                 print('tablerow:%s'%tablerow)
-                sht.Cells.Clear()               
+                sht.Cells.Clear()   
+                sht.Cells(1,1).Select()
+#                time.sleep(self.seconds/2)
                 shtSum.Activate()
                 shtSum.Hyperlinks.Add(Anchor=shtSum.Cells(i+2,j+2),Address='',SubAddress=shtAddress,TextToDisplay=shtAddress)
                 wkb.Save()
@@ -325,7 +328,6 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
         print('<'*40)
         os.startfile(dirname)
         return pptFile
-    
     def linkExcelElement(self,i,linktype,credic,attrs,wkb,shts,trackFile,saveTableAsPicture=None,keepChartListObjects=None):
         self.selectSlide(credic['SlideNumber'])
         self.pptShape = self.pptSlide.Shapes(credic['ZOrderPosition'])
@@ -398,7 +400,6 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
             msg = 'index %s failed!' % i
             print(msg,file=open(trackFile,'a'))
             return False
-        
     def linkExcelTableInformation(self,shts):
         '''
         get table information
@@ -414,7 +415,6 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                 tabledic[i.text].append(i.row)
             del tabledic['']
             self.tablesummary = {k:(min(v),max(v)) for k,v in tabledic.items()}              
-            
     def linkExcelinitFiles(self,dirname):
         '''
         linkPPT, init files
@@ -429,14 +429,17 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
         
 
 
-# In[69]:
+# #### Test_linkPPTtoExcel
+
+# In[10]:
 
 
 if __name__ == '__main__':
-    # create
-    MPE = MSOPowerpointEase(Blank=None)
-    dirname = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_Table_20190321121718'
-    pptFile = MPE.linkExceltoPPT(dirname,saveTableAsPicture=None,keepChartListObjects=True)
+    ## export
+    MPE = MSOPowerpointEase(Blank=False)
+    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/test.pptx'
+#    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/template.pptx'
+    dirname = MPE.linkPPTtoExcel(FileName=FileName,keepChartListObjects=None)
 
 
 # #### Test_linkExceltoPPT
@@ -449,17 +452,4 @@ if __name__ == '__main__':
     MPE = MSOPowerpointEase(Blank=None)
     dirname = r'C:\SmithYe\PythonProject3\OfficeApi\MSOPowerpoint\testfiles\template_Group_20181219095409'
     pptFile = MPE.linkExceltoPPT(dirname,saveTableAsPicture=True,keepChartListObjects=True)
-
-
-# #### Test_linkPPTtoExcel
-
-# In[ ]:
-
-
-if __name__ == '__main__':
-    ## export
-    MPE = MSOPowerpointEase(Blank=False)
-    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/powerpoint.pptx'
-#    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/template.pptx'
-    dirname = MPE.linkPPTtoExcel(FileName=FileName,keepChartListObjects=None)
 
