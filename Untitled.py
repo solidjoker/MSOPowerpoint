@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[27]:
+# In[66]:
 
 
 import os, time, datetime, pprint, traceback, tempfile
@@ -17,7 +17,7 @@ import MSOPowerpointConfig
 import MSOPowerpointFunc
 
 
-# In[56]:
+# In[89]:
 
 
 appExcel = 'Excel.Application'
@@ -31,20 +31,67 @@ wkb = wkbs.Open(filename)
 shts = wkb.WorkSheets
 
 
-# In[57]:
+# In[90]:
 
 
-shtsum = shts['Summary']
+def linkExcelTableInformation(shts):
+    '''
+    get table information
+    '''
+    shtnames = [i.name for i in shts]
+    if 'Table_Summary' in shtnames:
+        shttablesum = shts['Table_Summary']
+        cells1 = shttablesum.Cells(1,1)
+        cells2 = shttablesum.Cells(shttablesum.UsedRange.Rows.Count,1)
+        rng = shttablesum.Range(cells1,cells2)
+        tabledic = defaultdict(list)
+        for i in rng:
+            tabledic[i.text].append(i.row)
+        del tabledic['']
+        return {k:(min(v),max(v)) for k,v in tabledic.items()}  
 
 
-# In[65]:
+# In[91]:
 
 
-shtsum.Cells(2,15).hyperlinks(1).SubAddress
+tablesummary = linkExcelTableInformation(shts)
 
 
-# In[54]:
+# In[92]:
 
 
-rng.Address
+tablesummary
+
+
+# In[93]:
+
+
+shtTableData = shts['Table_Data']   
+cells1 = shtTableData.Cells(1,1)
+
+
+# In[96]:
+
+
+cells1.CurrentRegion.Copy()
+
+
+# In[79]:
+
+
+from collections import defaultdict
+tabledic = defaultdict(list)
+
+for i in rng:
+    tabledic[i.text].append(i.row)
+    print(i.text,i.row)
+    
+del tabledic['']
+tablesummarydic = {k:(min(v),max(v)) for k,v in tabledic.items()}
+
+
+# In[86]:
+
+
+tablesummarydic
 
