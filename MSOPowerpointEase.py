@@ -2,18 +2,21 @@
 # coding: utf-8
 
 # # MSOPowerpoint
+# 
+# update: 2019-03-21
+# 
+# - Table都放到一页，根据range区分
+# 
 # update: 2018-12-15
 # 
 # <li>利用ppt原先的板式，对于除Table、SmartShape之外的图形，替换Text、Data</li>
 # <li>扫描获取ZOrder并排序,Table放最后，其他根据上、左顺序排</li>
 # <li>需要处理Excel之间的变化</li>
-# 
 # <li>图表中的listobject需要去除</li>
-# 
 # <li>对于损坏的Chart的修复</li>
 # 
 
-# In[1]:
+# In[49]:
 
 
 import os, time, datetime, pprint, traceback, tempfile, copy
@@ -32,7 +35,7 @@ from MSOPowerpointBase import MSOPowerpointBase
 from MSOPowerpointElement import MSOPowerpointElement
 
 
-# In[2]:
+# In[50]:
 
 
 class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
@@ -136,9 +139,11 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
             self.exportDfsToExcel([df],['Summary'],excelFile)
             # Init Excel
             ExcelApp, wkbs, wkb, shts, shtSum = self.initExcel(filename=excelFile,shtname='Summary')
+            ExcelApp.DisplayAlerts = False
+            print(shts,shtSum)
             # 2nd Round Table
             print('linkPPTtoExcel, 2nd Round for Table start >>>')        
-            self.linkPPTTable(df, wkb, shts, shtSum)        
+            self.linkPPTTable(df, wkb, shts, shtSum)     
             # 3rd Round Chart
             print('linkPPTtoExcel, 3rd Round for Chart start >>>')        
             self.linkPPTChart(df, wkb, shts, shtSum, keepChartListObjects)
@@ -200,29 +205,53 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                     shapedic['ShapeType'] = 'Shape'
                 shapeList.append(shapedic.copy())
         except:
-            traceback.print_exc() 
+            traceback.print_exc()                
     def linkPPTTable(self,df, wkb, shts, shtSum):
         '''
         linkPPTSlide, in linkPPTtoExcel, 2nd Round for Table
+        2019-03-21: all in one sheet:"Table_Data" with "Table_Summary"
+        Remark: only continuious region can remain
         '''
-        
+        # ShapeSoucre序号
         j = list(df.columns).index('ShapeSource')
+        # init
+        tablerow = 1
+        for i in df.index.tolist():
+            if df['ReplaceShapeSource'][i] == True:
+                sht = shts.Add(After=wkb.Activesheet)
+                sht.Name = 'Table_Temp'                
+                shtTableData = shts.Add(After=wkb.Activesheet)
+                shtTableData.Name = 'Table_Data'
+                shtTableSummary = shts.Add(After=wkb.Activesheet)
+                shtTableSummary.Name = 'Table_Summary' 
+                break
+        # to Excel
         for i in df.index.tolist():
             if df['ReplaceShapeSource'][i] == True:
                 linkdic = df.transpose()[i].to_dict()    
-                sht = shts.Add(After=wkb.Activesheet)
-                sht.Name = linkdic['ShapeSource']
+
                 self.selectSlide(linkdic['SlideNumber'])
                 self.pptShape = self.pptSlide.Shapes(linkdic['ZOrderPosition'])
                 self.setShape()
                 self.pptShape.Copy()
                 time.sleep(self.seconds/2)
-                sht.Cells(1,1).Activate()
+                sht.Activate()
                 sht.Paste()
-                shtAddress = '%s!%s'%(sht.Name,sht.UsedRange.Address)
+                sht.Cells(1,1).CurrentRegion.Copy(shtTableData.Cells(tablerow,1))
+                totalrows = shtTableData.Cells(tablerow,1).CurrentRegion.Rows.Count
+                cell1 = shtTableSummary.Cells(tablerow,1)
+                cell2 = shtTableSummary.Cells(tablerow+totalrows-1,1)
+                rng = shtTableSummary.Range(cell1,cell2)
+                rng.value = linkdic['ShapeSource']
+                shtAddress = '%s!%s'%(shtTableData.Name,shtTableData.Cells(tablerow,1).CurrentRegion.Address)
+                
+                tablerow += totalrows + 1
+                print('tablerow:%s'%tablerow)
+                sht.Cells.Clear()               
                 shtSum.Activate()
                 shtSum.Hyperlinks.Add(Anchor=shtSum.Cells(i+2,j+2),Address='',SubAddress=shtAddress,TextToDisplay=shtAddress)
                 wkb.Save()
+        sht.Delete()     
     def linkPPTChart(self,df, wkb, shts, shtSum, keepChartListObjects=None):
         '''
         linkPPTSlide, in linkPPTtoExcel, 3rd Round for Chart
@@ -334,6 +363,7 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
                     print(msg)
                     self.linkExcelTrack(msg,trackFile)
 
+            ### 需要修改
             if linktype == 'ShapeSource':
                 shtdata = shts(credic[linktype])
                 shtdata.Activate()
@@ -379,15 +409,26 @@ class MSOPowerpointEase(MSOPowerpointBase,MSOPowerpointElement):
         
 
 
+# #### Test 2019-03-21
+
+# In[51]:
+
+
+MPE = MSOPowerpointEase(Blank=False)
+FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_Table.pptx'
+#FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/template.pptx'
+dirname = MPE.linkPPTtoExcel(FileName=FileName,keepChartListObjects=None)
+
+
 # #### Test_linkPPTtoExcel
 
-# In[3]:
+# In[21]:
 
 
 if __name__ == '__main__':
     ## export
     MPE = MSOPowerpointEase(Blank=False)
-    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/teo.pptx'
+    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_Table.pptx'
     #FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/template.pptx'
     dirname = MPE.linkPPTtoExcel(FileName=FileName,keepChartListObjects=None)
 

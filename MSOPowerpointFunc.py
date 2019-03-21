@@ -36,7 +36,7 @@ import pandas as pd
 import numpy as np
 
 
-# In[3]:
+# In[2]:
 
 
 def sheetsToDfs(filename):
@@ -281,4 +281,10 @@ if __name__ == '__main__':
     filename = 'test.xlsx'
     tmp = getExcelTextFile(filename)
     wb = xw.Book(tmp)
+
+
+# In[4]:
+
+
+getRGB(r=255,g=255,b=255)
 

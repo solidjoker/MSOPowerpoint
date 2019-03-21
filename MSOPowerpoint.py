@@ -836,12 +836,13 @@ class MSOPowerpoint(MSOPowerpointBase,MSOPowerpointElement):
 
 # #### Test_runExportPPTtoExcel
 
-# In[7]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     ## export
     FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/template_shape.pptx'
+    FileName = r'C:/SmithYe/PythonProject3/OfficeApi/MSOPowerpoint/testfiles/广汽传祺竞品分析报告_2018FY190306.pptx'
     MP = MSOPowerpoint(FileName=FileName,WithWindow=1)
     MP.exportShapesInfo()
     print(MP.exportPPTtoExcel())
