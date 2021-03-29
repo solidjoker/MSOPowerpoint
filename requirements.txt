@@ -215,7 +215,7 @@ pydub==0.22.0
 PyExecJS==1.5.1
 pyflakes==2.0.0
 pyftpdlib==1.5.4
-Pygments==2.2.0
+Pygments==2.7.4
 PyHamcrest==1.9.0
 PyInstaller==3.3.1
 pylint==2.2.2
