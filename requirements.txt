@@ -137,7 +137,7 @@ libarchive-c==2.8
 line-profiler==2.1.2
 llvmlite==0.26.0
 locket==0.2.0
-lxml==4.2.5
+lxml==4.6.3
 macholib==1.10
 mapscript==7.2
 Markdown==2.6.11
