@@ -317,7 +317,7 @@ typed-ast==1.1.0
 typing==3.6.4
 uiautomator==0.3.2
 unicodecsv==0.14.1
-urllib3==1.23
+urllib3==1.26.5
 vine==1.1.4
 w3lib==1.19.0
 Wand==0.4.4
