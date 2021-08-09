@@ -255,7 +255,7 @@ python-louvain==0.11
 python-pptx==0.6.15
 pytz==2018.7
 PyWavelets==1.0.1
-pywin32==223
+pywin32==301
 pywin32-ctypes==0.1.2
 pywinpty==0.5.4
 PyYAML==3.13
