@@ -34,7 +34,7 @@ boost==0.1
 boto==2.49.0
 Bottleneck==1.2.1
 cchardet==2.1.1
-celery==4.2.1
+celery==5.2.2
 certifi==2018.10.15
 cffi==1.11.5
 chardet==3.0.4
