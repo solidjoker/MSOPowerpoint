@@ -157,7 +157,7 @@ msgpack-python==0.5.6
 multipledispatch==0.6.0
 multitasking==0.0.7
 navigator-updater==0.2.1
-nbconvert==5.3.1
+nbconvert==6.3.0
 nbformat==4.4.0
 network==0.1
 networkx==2.2
